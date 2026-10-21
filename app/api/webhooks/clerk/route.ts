@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 
-import { createUser, deleteUser, updateUser } from "@/lib/actions/user.actions";
+import { createUser, deleteUser, updateUser, getUserById } from "@/lib/actions/user.actions";
 
 type ClerkWebhookEvent = {
   data: any;
@@ -58,14 +58,16 @@ export async function POST(req: Request) {
 
     const user = {
       clerkId: id,
-      email: email_addresses?.[0]?.email_address ?? "",
-      username: username ?? "",
+      email: email_addresses?.[0]?.email_address ?? `${id}@no-email.local`,
+      username: username || id,
       firstName: first_name ?? "",
       lastName: last_name ?? "",
       photo: image_url ?? "",
     };
 
-    const newUser = await createUser(user);
+    // Idempotent: the user may already exist if signup ran before this webhook
+    const newUser =
+      (await getUserById(id)) ?? (await createUser(user));
 
     if (newUser) {
       const client = await clerkClient();

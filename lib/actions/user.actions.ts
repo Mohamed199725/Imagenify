@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { clerkClient } from "@clerk/nextjs/server";
 
 import User from "../database/models/user.model";
 import { connectToDatabase } from "../database/mongoose";
@@ -20,15 +21,34 @@ export async function createUser(user: CreateUserParams) {
 }
 
 // READ
+// Falls back to creating the user from Clerk if the Clerk webhook has not
+// provisioned them yet (e.g. signed up before the webhook was configured).
 export async function getUserById(userId: string) {
   try {
     await connectToDatabase();
 
-    const user = await User.findOne({ clerkId: userId });
+    const existingUser = await User.findOne({ clerkId: userId });
 
-    if (!user) throw new Error("User not found");
+    if (existingUser) return JSON.parse(JSON.stringify(existingUser));
 
-    return JSON.parse(JSON.stringify(user));
+    const client = await clerkClient();
+    const clerkUser = await client.users.getUser(userId);
+
+    if (!clerkUser) throw new Error("User not found");
+
+    const newUser = await User.create({
+      clerkId: clerkUser.id,
+      email:
+        clerkUser.primaryEmailAddress?.emailAddress ??
+        clerkUser.emailAddresses[0]?.emailAddress ??
+        `${clerkUser.id}@no-email.local`,
+      username: clerkUser.username ?? clerkUser.id,
+      photo: clerkUser.imageUrl ?? "",
+      firstName: clerkUser.firstName ?? "",
+      lastName: clerkUser.lastName ?? "",
+    });
+
+    return JSON.parse(JSON.stringify(newUser));
   } catch (error) {
     handleError(error);
   }
