@@ -1,0 +1,86 @@
+
+> imagenify@0.1.0 dev
+> next dev
+
+▲ Next.js 16.4.2 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.47:3000
+- Environments: .env.local
+✓ Ready in 383ms
+✓ Running next.config.ts took 36ms
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+
+  To migrate automatically, run:
+  npx @next/codemod@canary middleware-to-proxy .
+
+  Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+
+Clerk - DEPRECATION WARNING: "createRouteMatcher" is deprecated and will be removed in the next major release.
+Use resource-based auth checks instead. Move auth checks into each page, layout, API route, or Server Function that accesses protected data. Middleware-based auth checks rely on path matching, which can diverge from how Next.js routes requests and leave protected resources reachable. For a migration guide, see: https://clerk.com/docs/guides/development/upgrading/upgrade-guides/migrate-from-create-route-matcher
+Attention: Clerk collects telemetry data from its SDKs when connected to development instances.
+The data collected is used to inform Clerk's product roadmap.
+To learn more, including how to opt-out from the telemetry program, visit: https://clerk.com/docs/telemetry.
+
+ GET / 200 in 4.1s (next.js: 1612ms, proxy.ts: 16ms, application-code: 2.4s)
+ GET / 200 in 865ms (next.js: 21ms, proxy.ts: 11ms, application-code: 833ms)
+[browser] Image with src "http://localhost:3000/assets/images/logo-text.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "http://localhost:3000/assets/icons/search.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+{
+  request_options: {
+    protocol: 'https:',
+    hostname: 'api.cloudinary.com',
+    path: '/v1_1/rxh0dhgo/resources%2Fsearch',
+    pathname: '/v1_1/rxh0dhgo/resources%2Fsearch',
+    query: '',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'User-Agent': 'CloudinaryNodeJS/2.11.0 (Node 24.21.0)',
+      'Content-Length': 98
+    },
+    auth: '373496714228139:yq_8zjt7PWR-hx5Kg8JCTf2DH-8'
+  },
+  query_params: '{"expression":"folder=imaginify AND (title=\\"couch\\"* OR public_id=\\"couch\\"*)","max_results":500}',
+  error: {
+    message: `Query Error (at position 36) 'folder=imaginify AND (title="couch" ➥➥➥* OR public_id="couch"*)'`,
+    http_code: 400
+  }
+}
+⨯ Error: Unknown error: {"request_options":{"protocol":"https:","hostname":"api.cloudinary.com","path":"/v1_1/rxh0dhgo/resources%2Fsearch","pathname":"/v1_1/rxh0dhgo/resources%2Fsearch","query":"","method":"POST","headers":{"Content-Type":"application/json","User-Agent":"CloudinaryNodeJS/2.11.0 (Node 24.21.0)","Content-Length":98},"auth":"373496714228139:yq_8zjt7PWR-hx5Kg8JCTf2DH-8"},"query_params":"{\"expression\":\"folder=imaginify AND (title=\\\"couch\\\"* OR public_id=\\\"couch\\\"*)\",\"max_results\":500}","error":{"message":"Query Error (at position 36) 'folder=imaginify AND (title=\"couch\" ➥➥➥* OR public_id=\"couch\"*)'","http_code":400}}
+    at handleError (lib\utils.ts:26:11)
+    at getAllImages (lib\actions\image.actions.ts:159:16)
+    at async Home (app\(root)\page.tsx:12:18)
+  24 |     // This is an unknown type of error
+  25 |     console.error(error);
+> 26 |     throw new Error(`Unknown error: ${JSON.stringify(error)}`);
+     |           ^
+  27 |   }
+  28 | };
+  29 | {
+  digest: '2619470971'
+}
+ GET /?query=couch 200 in 264ms (next.js: 5ms, proxy.ts: 12ms, application-code: 247ms)
+[browser] Uncaught Error: Unknown error: {"request_options":{"protocol":"https:","hostname":"api.cloudinary.com","path":"/v1_1/rxh0dhgo/resources%2Fsearch","pathname":"/v1_1/rxh0dhgo/resources%2Fsearch","query":"","method":"POST","headers":{"Content-Type":"application/json","User-Agent":"CloudinaryNodeJS/2.11.0 (Node 24.21.0)","Content-Length":98},"auth":"373496714228139:yq_8zjt7PWR-hx5Kg8JCTf2DH-8"},"query_params":"{\"expression\":\"folder=imaginify AND (title=\\\"couch\\\"* OR public_id=\\\"couch\\\"*)\",\"max_results\":500}","error":{"message":"Query Error (at position 36) 'folder=imaginify AND (title=\"couch\" ➥➥➥* OR public_id=\"couch\"*)'","http_code":400}}
+    at handleError (lib\utils.ts:26:11)
+    at getAllImages (lib\actions\image.actions.ts:159:16)
+    at Home (app\(root)\page.tsx:12:18)
+  24 |     // This is an unknown type of error
+  25 |     console.error(error);
+> 26 |     throw new Error(`Unknown error: ${JSON.stringify(error)}`);
+     |           ^
+  27 |   }
+  28 | };
+  29 |
+[browser] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview (https://accepted-antelope-2958.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js:40:1032)
+✓ Compiled in 55ms
+✓ Compiled in 45ms
+✓ Compiled in 100ms
+ GET / 200 in 789ms (next.js: 28ms, proxy.ts: 5ms, application-code: 757ms)
+[browser] Image with src "http://localhost:3000/assets/images/logo-text.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "http://localhost:3000/assets/icons/search.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview (https://accepted-antelope-2958.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js:40:1032)
+ GET /?query=couch 200 in 523ms (next.js: 6ms, proxy.ts: 12ms, application-code: 505ms)
+ GET /?query=hoodie 200 in 455ms (next.js: 4ms, proxy.ts: 14ms, application-code: 438ms)
+ GET /?query=zzzznotfound 200 in 438ms (next.js: 3ms, proxy.ts: 8ms, application-code: 427ms)
+ GET / 200 in 32ms (next.js: 4ms, proxy.ts: 14ms, application-code: 13ms)
+ GET / 200 in 464ms (next.js: 4ms, proxy.ts: 12ms, application-code: 448ms)

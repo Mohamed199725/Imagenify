@@ -15,6 +15,9 @@ const populateUser = (query: any) => query.populate({
   select: '_id firstName lastName clerkId'
 })
 
+// Escape user input so it is matched literally inside a RegExp
+const escapeRegex = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+
 // ADD IMAGE
 export async function addImage({ image, userId, path }: AddImageParams) {
   try {
@@ -110,24 +113,45 @@ export async function getAllImages({ limit = 9, page = 1, searchQuery = '' }: {
 
     let expression = 'folder=imaginify';
 
-    if (searchQuery) {
-      expression += ` AND ${searchQuery}`
+    const trimmedQuery = searchQuery.trim();
+
+    if (trimmedQuery) {
+      // `:` is the tokenized operator and `*` is the prefix wildcard. Cloudinary
+      // has no `title` field, so match the file name and the public id instead.
+      const escapedQuery = trimmedQuery.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+
+      expression += ` AND (filename:${escapedQuery}* OR public_id:${escapedQuery}*)`;
     }
 
-    const { resources } = await cloudinary.search
-      .expression(expression)
-      .execute();
+    let resources: { public_id: string }[] = [];
 
-    const resourceIds = resources.map((resource: any) => resource.public_id);
+    try {
+      const result = await cloudinary.search
+        .expression(expression)
+        .max_results(500)
+        .execute();
+
+      resources = result.resources;
+    } catch (error) {
+      // Never let a Cloudinary hiccup take the whole page down, just skip this filter
+      console.error('Cloudinary search failed:', error);
+    }
+
+    const resourceIds = resources.map((resource) => resource.public_id);
 
     let query = {};
 
-    if(searchQuery) {
-      query = {
-        publicId: {
-          $in: resourceIds
-        }
+    if (trimmedQuery) {
+      const conditions: Record<string, unknown>[] = [
+        // The app titles are stored in MongoDB, that is what users are searching for
+        { title: { $regex: escapeRegex(trimmedQuery), $options: 'i' } },
+      ];
+
+      if (resourceIds.length > 0) {
+        conditions.push({ publicId: { $in: resourceIds } });
       }
+
+      query = { $or: conditions };
     }
 
     const skipAmount = (Number(page) -1) * limit;
